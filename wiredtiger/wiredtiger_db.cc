@@ -32,55 +32,55 @@
 
 namespace {
   const std::string PROP_HOME = WT_PREFIX ".home";
-  const std::string PROP_HOME_DEFAULT = "";
+  const std::string PROP_HOME_DEFAULT = "/tmp/ycsb-wiredtiger";
 
   const std::string PROP_FORMAT = WT_PREFIX ".format";
   const std::string PROP_FORMAT_DEFAULT = "single";
 
   const std::string PROP_CACHE_SIZE = WT_PREFIX ".cache_size";
-  const std::string PROP_CACHE_SIZE_DEFAULT = "100MB";
+  const std::string PROP_CACHE_SIZE_DEFAULT = "8192MB";
 
   const std::string PROP_DIRECT_IO = WT_PREFIX ".direct_io";
-  const std::string PROP_DIRECT_IO_DEFAULT = "[]";
+  const std::string PROP_DIRECT_IO_DEFAULT = "[data]";
 
   const std::string PROP_IN_MEMORY = WT_PREFIX ".in_memory";
   const std::string PROP_IN_MEMORY_DEFAULT = "false";
 
   const std::string PROP_LSM_MGR_MERGE = WT_PREFIX ".lsm_mgr.merge";
-  const std::string PROP_LSM_MGR_MERGE_DEFAULT = "true";
+  const std::string PROP_LSM_MGR_MERGE_DEFAULT = "";
 
   const std::string PROP_LSM_MGR_MAX_WORKERS = WT_PREFIX ".lsm_mgr.max_workers";
-  const std::string PROP_LSM_MGR_MAX_WORKERS_DEFAULT = "4";
+  const std::string PROP_LSM_MGR_MAX_WORKERS_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_ALLOCATION_SIZE = WT_PREFIX ".blk_mgr.allocation_size";
-  const std::string PROP_BLK_MGR_ALLOCATION_SIZE_DEFAULT = "4KB";
+  const std::string PROP_BLK_MGR_ALLOCATION_SIZE_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_BLOOM_BIT_COUNT = WT_PREFIX ".blk_mgr.bloom_bit_count";
-  const std::string PROP_BLK_MGR_BLOOM_BIT_COUNT_DEFAULT = "16";
+  const std::string PROP_BLK_MGR_BLOOM_BIT_COUNT_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_BLOOM_HASH_COUNT = WT_PREFIX ".blk_mgr.bloom_hash_count";
-  const std::string PROP_BLK_MGR_BLOOM_HASH_COUNT_DEFAULT = "8";
+  const std::string PROP_BLK_MGR_BLOOM_HASH_COUNT_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_CHUNK_MAX = WT_PREFIX ".blk_mgr.chunk_max";
-  const std::string PROP_BLK_MGR_CHUNK_MAX_DEFAULT = "5GB";
+  const std::string PROP_BLK_MGR_CHUNK_MAX_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_CHUNK_SIZE = WT_PREFIX ".blk_mgr.chunk_size";
-  const std::string PROP_BLK_MGR_CHUNK_SIZE_DEFAULT = "10MB";
+  const std::string PROP_BLK_MGR_CHUNK_SIZE_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_COMPRESSOR = WT_PREFIX ".blk_mgr.compressor";
-  const std::string PROP_BLK_MGR_COMPRESSOR_DEFAULT = "snappy";
+  const std::string PROP_BLK_MGR_COMPRESSOR_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_BTREE_INTERNAL_PAGE_MAX = WT_PREFIX ".blk_mgr.btree.internal_page_max";
-  const std::string PROP_BLK_MGR_BTREE_INTERNAL_PAGE_MAX_DEFAULT = "4KB";
+  const std::string PROP_BLK_MGR_BTREE_INTERNAL_PAGE_MAX_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_BTREE_LEAF_KEY_MAX = WT_PREFIX ".blk_mgr.btree.leaf_key_max";
-  const std::string PROP_BLK_MGR_BTREE_LEAF_KEY_MAX_DEFAULT = "0";
+  const std::string PROP_BLK_MGR_BTREE_LEAF_KEY_MAX_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_BTREE_LEAF_VALUE_MAX = WT_PREFIX ".blk_mgr.btree.leaf_value_max";
-  const std::string PROP_BLK_MGR_BTREE_LEAF_VALUE_MAX_DEFAULT = "0";
+  const std::string PROP_BLK_MGR_BTREE_LEAF_VALUE_MAX_DEFAULT = "";
 
   const std::string PROP_BLK_MGR_BTREE_LEAF_PAGE_MAX = WT_PREFIX ".blk_mgr.btree.leaf_page_max";
-  const std::string PROP_BLK_MGR_BTREE_LEAF_PAGE_MAX_DEFAULT = "32KB";
+  const std::string PROP_BLK_MGR_BTREE_LEAF_PAGE_MAX_DEFAULT = "";
 }
 
 namespace ycsbc {

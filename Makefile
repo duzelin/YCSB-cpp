@@ -15,6 +15,7 @@ BIND_WIREDTIGER ?= 0
 BIND_LEVELDB ?= 0
 BIND_ROCKSDB ?= 0
 BIND_LMDB ?= 0
+BIND_TREELINE ?= 0
 
 # Extra options
 DEBUG_BUILD ?= 0
@@ -36,7 +37,8 @@ else
 endif
 
 ifeq ($(BIND_WIREDTIGER), 1)
-	LDFLAGS += -lwiredtiger -ldl -lz -lsnappy -lzstd -lbz2 -llz4
+	LDFLAGS += -lwiredtiger -ltcmalloc
+#-lz -lsnappy -lzstd -lbz2 -llz4
 	SOURCES += $(wildcard wiredtiger/*.cc)
 endif
 
@@ -46,13 +48,45 @@ ifeq ($(BIND_LEVELDB), 1)
 endif
 
 ifeq ($(BIND_ROCKSDB), 1)
-	LDFLAGS += -lrocksdb -ldl -lz -lsnappy -lzstd -lbz2 -llz4
+	EXTRA_LDFLAGS += -L/home/dzl/rocksdb
+	LDFLAGS += -lrocksdb -ldl -lz 
+# -lsnappy -lzstd -lbz2 -llz4
+	EXTRA_CXXFLAGS += -I/home/dzl/rocksdb/include
 	SOURCES += $(wildcard rocksdb/*.cc)
 endif
 
 ifeq ($(BIND_LMDB), 1)
 	LDFLAGS += -llmdb
 	SOURCES += $(wildcard lmdb/*.cc)
+endif
+
+ifeq ($(BIND_TREELINE_CoW), 1)
+	EXTRA_LDFLAGS += -L/home/dzl/treeline_CoW/build -L/home/dzl/treeline_CoW/build/_deps/crc32c-build -L/home/dzl/treeline_CoW/build/third_party/masstree -L/home/dzl/treeline_CoW/build/page_grouping
+	LDFLAGS += -lpg_treeline_cow -lmasstree -lpg -lcrc32c
+	EXTRA_CXXFLAGS += -I/home/dzl/treeline_CoW/include
+	SOURCES += $(wildcard treeline_CoW/*.cc)
+endif
+
+ifeq ($(BIND_TREELINE), 1)
+	EXTRA_LDFLAGS += -L/home/dzl/treeline/build -L/home/dzl/treeline/build/_deps/crc32c-build -L/home/dzl/treeline/build/third_party/masstree -L/home/dzl/treeline/build/page_grouping
+	LDFLAGS += -lpg_treeline -lmasstree -lpg -lcrc32c
+	EXTRA_CXXFLAGS += -I/home/dzl/treeline/include
+	SOURCES += $(wildcard treeline/*.cc)
+endif
+
+ifeq ($(BIND_LSM2LIX), 1)
+	EXTRA_LDFLAGS += -L/home/dzl/LSM-LIX
+	EXTRA_LDFLAGS += -L/home/dzl/treeline/build -L/home/dzl/treeline/build/_deps/crc32c-build -L/home/dzl/treeline/build/third_party/masstree -L/home/dzl/treeline/build/page_grouping
+	EXTRA_LDFLAGS += -L/home/dzl/rocksdb
+	LDFLAGS += -llsm2lix
+	LDFLAGS += -lpg_treeline -lmasstree -lpg -lcrc32c
+	LDFLAGS += -lrocksdb -ldl -lz
+	LDFLAGS += -lboost_serialization
+	EXTRA_CXXFLAGS += -I/home/dzl/LSM-LIX/include
+	EXTRA_CXXFLAGS += -I/home/dzl/treeline/include
+	EXTRA_CXXFLAGS += -I/home/dzl/rocksdb/include
+
+	SOURCES += $(wildcard lsm2lix/*.cc)
 endif
 
 CXXFLAGS += -std=c++17 -Wall -pthread $(EXTRA_CXXFLAGS) -I./

@@ -23,7 +23,7 @@
 
 namespace {
   const std::string PROP_NAME = "rocksdb.dbname";
-  const std::string PROP_NAME_DEFAULT = "";
+  const std::string PROP_NAME_DEFAULT = "/tmp/ycsb-rocksdb";
 
   const std::string PROP_FORMAT = "rocksdb.format";
   const std::string PROP_FORMAT_DEFAULT = "single";
@@ -38,7 +38,7 @@ namespace {
   const std::string PROP_COMPRESSION_DEFAULT = "no";
 
   const std::string PROP_MAX_BG_JOBS = "rocksdb.max_background_jobs";
-  const std::string PROP_MAX_BG_JOBS_DEFAULT = "0";
+  const std::string PROP_MAX_BG_JOBS_DEFAULT = "8";
 
   const std::string PROP_TARGET_FILE_SIZE_BASE = "rocksdb.target_file_size_base";
   const std::string PROP_TARGET_FILE_SIZE_BASE_DEFAULT = "0";
@@ -50,7 +50,7 @@ namespace {
   const std::string PROP_MAX_BYTES_FOR_LEVEL_BASE_DEFAULT = "0";
 
   const std::string PROP_WRITE_BUFFER_SIZE = "rocksdb.write_buffer_size";
-  const std::string PROP_WRITE_BUFFER_SIZE_DEFAULT = "0";
+  const std::string PROP_WRITE_BUFFER_SIZE_DEFAULT = "64";
 
   const std::string PROP_MAX_WRITE_BUFFER = "rocksdb.max_write_buffer_number";
   const std::string PROP_MAX_WRITE_BUFFER_DEFAULT = "0";
@@ -71,10 +71,10 @@ namespace {
   const std::string PROP_L0_STOP_TRIGGER_DEFAULT = "0";
 
   const std::string PROP_USE_DIRECT_WRITE = "rocksdb.use_direct_io_for_flush_compaction";
-  const std::string PROP_USE_DIRECT_WRITE_DEFAULT = "false";
+  const std::string PROP_USE_DIRECT_WRITE_DEFAULT = "true";
 
   const std::string PROP_USE_DIRECT_READ = "rocksdb.use_direct_reads";
-  const std::string PROP_USE_DIRECT_READ_DEFAULT = "false";
+  const std::string PROP_USE_DIRECT_READ_DEFAULT = "true";
 
   const std::string PROP_USE_MMAP_WRITE = "rocksdb.allow_mmap_writes";
   const std::string PROP_USE_MMAP_WRITE_DEFAULT = "false";
@@ -83,13 +83,13 @@ namespace {
   const std::string PROP_USE_MMAP_READ_DEFAULT = "false";
 
   const std::string PROP_CACHE_SIZE = "rocksdb.cache_size";
-  const std::string PROP_CACHE_SIZE_DEFAULT = "0";
+  const std::string PROP_CACHE_SIZE_DEFAULT = "1024";
 
   const std::string PROP_COMPRESSED_CACHE_SIZE = "rocksdb.compressed_cache_size";
   const std::string PROP_COMPRESSED_CACHE_SIZE_DEFAULT = "0";
 
   const std::string PROP_BLOOM_BITS = "rocksdb.bloom_bits";
-  const std::string PROP_BLOOM_BITS_DEFAULT = "0";
+  const std::string PROP_BLOOM_BITS_DEFAULT = "10";
 
   const std::string PROP_INCREASE_PARALLELISM = "rocksdb.increase_parallelism";
   const std::string PROP_INCREASE_PARALLELISM_DEFAULT = "false";
@@ -241,33 +241,33 @@ void RocksdbDB::GetOptions(const utils::Properties &props, rocksdb::Options *opt
   }
 
   const std::string options_file = props.GetProperty(PROP_OPTIONS_FILE, PROP_OPTIONS_FILE_DEFAULT);
-  if (options_file != "") {
-    rocksdb::Status s = rocksdb::LoadOptionsFromFile(options_file, env, opt, cf_descs);
-    if (!s.ok()) {
-      throw utils::Exception(std::string("RocksDB LoadOptionsFromFile: ") + s.ToString());
-    }
-  } else {
+  // if (options_file != "") {
+  //   rocksdb::Status s = rocksdb::LoadOptionsFromFile(options_file, env, opt, cf_descs);
+  //   if (!s.ok()) {
+  //     throw utils::Exception(std::string("RocksDB LoadOptionsFromFile: ") + s.ToString());
+  //   }
+  // } else {
     const std::string compression_type = props.GetProperty(PROP_COMPRESSION,
                                                            PROP_COMPRESSION_DEFAULT);
-    if (compression_type == "no") {
+    //if (compression_type == "no") {
       opt->compression = rocksdb::kNoCompression;
-    } else if (compression_type == "snappy") {
-      opt->compression = rocksdb::kSnappyCompression;
-    } else if (compression_type == "zlib") {
-      opt->compression = rocksdb::kZlibCompression;
-    } else if (compression_type == "bzip2") {
-      opt->compression = rocksdb::kBZip2Compression;
-    } else if (compression_type == "lz4") {
-      opt->compression = rocksdb::kLZ4Compression;
-    } else if (compression_type == "lz4hc") {
-      opt->compression = rocksdb::kLZ4HCCompression;
-    } else if (compression_type == "xpress") {
-      opt->compression = rocksdb::kXpressCompression;
-    } else if (compression_type == "zstd") {
-      opt->compression = rocksdb::kZSTD;
-    } else {
-      throw utils::Exception("Unknown compression type");
-    }
+    // } else if (compression_type == "snappy") {
+    //   opt->compression = rocksdb::kSnappyCompression;
+    // } else if (compression_type == "zlib") {
+    //   opt->compression = rocksdb::kZlibCompression;
+    // } else if (compression_type == "bzip2") {
+    //   opt->compression = rocksdb::kBZip2Compression;
+    // } else if (compression_type == "lz4") {
+    //   opt->compression = rocksdb::kLZ4Compression;
+    // } else if (compression_type == "lz4hc") {
+    //   opt->compression = rocksdb::kLZ4HCCompression;
+    // } else if (compression_type == "xpress") {
+    //   opt->compression = rocksdb::kXpressCompression;
+    // } else if (compression_type == "zstd") {
+    //   opt->compression = rocksdb::kZSTD;
+    // } else {
+    //   throw utils::Exception("Unknown compression type");
+    // }
 
     int val = std::stoi(props.GetProperty(PROP_MAX_BG_JOBS, PROP_MAX_BG_JOBS_DEFAULT));
     if (val != 0) {
@@ -287,7 +287,7 @@ void RocksdbDB::GetOptions(const utils::Properties &props, rocksdb::Options *opt
     }
     val = std::stoi(props.GetProperty(PROP_WRITE_BUFFER_SIZE, PROP_WRITE_BUFFER_SIZE_DEFAULT));
     if (val != 0) {
-      opt->write_buffer_size = val;
+      opt->write_buffer_size = val * 1024 * 1024;
     }
     val = std::stoi(props.GetProperty(PROP_MAX_WRITE_BUFFER, PROP_MAX_WRITE_BUFFER_DEFAULT));
     if (val != 0) {
@@ -328,18 +328,20 @@ void RocksdbDB::GetOptions(const utils::Properties &props, rocksdb::Options *opt
       opt->allow_mmap_reads = true;
     }
 
-    rocksdb::BlockBasedTableOptions table_options;
+    rocksdb::LRUCacheOptions cache_options;
     size_t cache_size = std::stoul(props.GetProperty(PROP_CACHE_SIZE, PROP_CACHE_SIZE_DEFAULT));
-    if (cache_size > 0) {
-      block_cache = rocksdb::NewLRUCache(cache_size);
-      table_options.block_cache = block_cache;
-    }
-    size_t compressed_cache_size = std::stoul(props.GetProperty(PROP_COMPRESSED_CACHE_SIZE,
-                                                                PROP_COMPRESSED_CACHE_SIZE_DEFAULT));
-    if (compressed_cache_size > 0) {
-      block_cache_compressed = rocksdb::NewLRUCache(compressed_cache_size);
-      table_options.block_cache_compressed = block_cache_compressed;
-    }
+    cache_options.capacity = cache_size * 1024 *1024;
+    rocksdb::BlockBasedTableOptions table_options;
+    // table_options.block_size = 4 * 1024;
+    // table_options.checksum = rocksdb::kNoChecksum;
+    table_options.block_cache = rocksdb::NewLRUCache(cache_options);
+    // size_t compressed_cache_size = std::stoul(props.GetProperty(PROP_COMPRESSED_CACHE_SIZE,
+    //                                                             PROP_COMPRESSED_CACHE_SIZE_DEFAULT));
+    // if (compressed_cache_size > 0) {
+    //   block_cache_compressed = rocksdb::NewLRUCache(compressed_cache_size);
+    //   table_options.block_cache_compressed = block_cache_compressed;
+    // }
+    table_options.cache_index_and_filter_blocks = true; // Important!!
     int bloom_bits = std::stoul(props.GetProperty(PROP_BLOOM_BITS, PROP_BLOOM_BITS_DEFAULT));
     if (bloom_bits > 0) {
       table_options.filter_policy.reset(rocksdb::NewBloomFilterPolicy(bloom_bits));
@@ -352,7 +354,7 @@ void RocksdbDB::GetOptions(const utils::Properties &props, rocksdb::Options *opt
     if (props.GetProperty(PROP_OPTIMIZE_LEVELCOMP, PROP_OPTIMIZE_LEVELCOMP_DEFAULT) == "true") {
       opt->OptimizeLevelStyleCompaction();
     }
-  }
+  //}
 }
 
 void RocksdbDB::SerializeRow(const std::vector<Field> &values, std::string &data) {

@@ -1,0 +1,19 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "YCSB-CPP",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/ycsb",
+            "console": "integratedTerminal",
+            "cwd": "${fileDirname}",
+            "args": ["-run", "-db", "lsm2lixdb", "-P", "../workloads/workloada",
+             "-s", "-p", "fixedkey8b=true", "-p", "fixedfieldlen=true", "-p",
+              "fieldcount=1", "-p", "fieldlength=24", "-p", "threadcount=16"]
+          }
+    ]
+}
